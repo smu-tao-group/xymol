@@ -20,8 +20,9 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name='xymol',
     description=(
-        "Explain Your Molecule: A Python package to understand and explain"
-        "atom/bond contribution for small molecules."
+        "eXplain Your MOLecule (XYMOL): A Python package to understand"
+        " and explain atom/bond contributions of small molecules"
+        " in machine learning models."
     ),
     long_description=long_description,
     long_description_content_type="text/markdown",
