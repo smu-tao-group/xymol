@@ -4,6 +4,7 @@
 """XYMOL class
 """
 
+from typing import Tuple
 from copy import deepcopy
 from rdkit import Chem
 from rdkit.Chem import rdmolfiles, rdmolops
@@ -42,3 +43,20 @@ class XYMOL:
             smiles_list.append(Chem.MolToSmiles(mol2))
 
         return smiles_list
+
+    def drop_each_bond(self) -> Tuple[list, list]:
+        mol = deepcopy(self.mol)
+        rwmol = Chem.RWMol(mol)
+        smiles = []
+        bonds = []
+
+        for bond in mol.GetBonds():
+            rwmol_copy = deepcopy(rwmol)
+            begin_atom = bond.GetBeginAtomIdx()
+            end_atom = bond.GetEndAtomIdx()
+            rwmol_copy.RemoveBond(begin_atom, end_atom)
+            rwmol_copy = self._sanitize(rwmol_copy)
+            bonds.append([begin_atom, end_atom])
+            smiles.append(Chem.MolToSmiles(rwmol_copy))
+
+        return bonds, smiles
