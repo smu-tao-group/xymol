@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""XYMOL class
+"""
+
 from copy import deepcopy
 from rdkit import Chem
 from rdkit.Chem import rdmolfiles, rdmolops
 
 
-class AtomContr:
+class XYMOL:
     def __init__(self, smiles: str) -> None:
         self.smiles = smiles
         self.mol = self._build_mol()
@@ -22,8 +25,8 @@ class AtomContr:
         while Chem.SanitizeMol(mol, catchErrors=True).real != 0:
             try:
                 Chem.SanitizeMol(mol)
-            except Exception as e:
-                atom_idx = int(e.args[0].split(" ")[2])
+            except Exception as exc:
+                atom_idx = int(exc.args[0].split(" ")[2])
                 mol.GetAtomWithIdx(atom_idx).SetIsAromatic(False)
         return mol
 
