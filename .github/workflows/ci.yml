@@ -42,7 +42,7 @@ jobs:
       run: pip install pylint pytest coverage
 
     - name: Check code formatting
-      run: pylint `find . -name '*.py'`
+      run: pylint `find ./xymol ./tests -name '*.py'`
 
     - name: Run testcases
       run: pytest --disable-pytest-warnings ./tests
