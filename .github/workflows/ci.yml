@@ -1,0 +1,48 @@
+name: GitHub CI
+
+on:
+  push:
+    paths:
+      - 'xymol/**'
+      - 'tests/**'
+      - '.github/workflows/**'
+  pull_request:
+    paths:
+      - 'xymol/**'
+      - 'tests/**'
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest] #, macOS-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python environment
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+
+    - name: Update pip and wheel
+      run: |
+        python -m pip install --upgrade pip
+        pip install wheel
+    - name: Install package
+      run: pip install .
+
+    - name: Install testing dependencies
+      run: pip install pylint pytest coverage
+
+    - name: Check code formatting
+      run: pylint `find . -name '*.py'`
+
+    - name: Run testcases
+      run: pytest --disable-pytest-warnings ./tests
