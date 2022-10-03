@@ -69,14 +69,14 @@ jobs:
       run: pip install pytest coverage
 
     - name: generate report
-        run: |
-          coverage run -m pytest
-          coverage xml
+      run: |
+        coverage run -m pytest
+        coverage xml
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@master
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          fail_ci_if_error: true
-          verbose: true
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@master
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml
+        fail_ci_if_error: true
+        verbose: true
