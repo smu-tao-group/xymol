@@ -27,13 +27,15 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     version=_get_version(),
-    url='https://github.com/smu-tao-group/AtomContr',
+    url='https://github.com/smu-tao-group/xymol',
     author='Hao Tian',
     author_email='htian1997@gmail.com',
     license='Apache License 2.0',
     packages=setuptools.find_packages(),
     install_requires=[
-        "rdkit"
+        "rdkit",
+        "numpy",
+        "matplotlib",
     ],
     python_requires='>=3.7'
 )
