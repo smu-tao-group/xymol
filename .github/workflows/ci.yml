@@ -20,9 +20,6 @@ jobs:
       matrix:
         os: [ubuntu-latest] #, macOS-latest, windows-latest]
         python-version: ["3.7", "3.8", "3.9", "3.10"]
-    defaults:
-      run:
-        shell: bash -l {0}
 
     steps:
     - uses: actions/checkout@master
@@ -40,10 +37,46 @@ jobs:
       run: pip install .
 
     - name: Install testing dependencies
-      run: pip install pylint pytest coverage
+      run: pip install pylint pytest
 
     - name: Check code formatting
       run: pylint `find ./xymol ./tests -name '*.py'`
 
     - name: Run testcases
       run: pytest --disable-pytest-warnings ./tests
+
+  coverage:
+    needs: build (ubuntu-latest, 3.7)
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Set up Python environment
+      uses: actions/setup-python@master
+      with:
+        python-version: 3.7
+
+    - name: Update pip and wheel
+      run: |
+        python -m pip install --upgrade pip
+        pip install wheel
+
+    - name: Install package
+      run: pip install .
+
+    - name: Install testing dependencies
+      run: pip install pytest coverage
+
+    - name: generate report
+        run: |
+          coverage run -m pytest
+          coverage xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@master
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: true
+          verbose: true
