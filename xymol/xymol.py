@@ -7,7 +7,8 @@
 from typing import Tuple
 from copy import deepcopy
 from rdkit import Chem
-from rdkit.Chem import rdmolfiles, rdmolops
+from rdkit.Chem import Draw, rdmolfiles, rdmolops
+from rdkit.Chem.Draw import SimilarityMaps
 
 
 class XYMOL:
@@ -60,3 +61,26 @@ class XYMOL:
             smiles.append(Chem.MolToSmiles(rwmol_copy))
 
         return bonds, smiles
+
+    def show_atom_number(
+        self, prop_label='molAtomMapNumber', zero_index=True
+    ) -> None:
+        for atom in self.mol.GetAtoms():
+            index = atom.GetIdx() + (zero_index is False)
+            atom.SetProp(prop_label, str(index))
+
+    def hide_atom_number(self) -> None:
+        for atom in self.mol.GetAtoms():
+            atom.SetAtomMapNum(0)
+
+    def plot_mol(self, file_name="mol.png", **kwargs) -> None:
+        img = Draw.MolToImage(self.mol, **kwargs)
+        img.save(file_name)
+
+    def plot_similarity_map(
+        self, weights, file_name="similarity_map.png", **kwargs
+    ) -> None:
+        img = SimilarityMaps.GetSimilarityMapFromWeights(
+            self.mol, weights, **kwargs
+        )
+        img.savefig(file_name, bbox_inches='tight', dpi=600)
