@@ -46,7 +46,7 @@ jobs:
       run: pytest --disable-pytest-warnings ./tests
 
   coverage:
-    needs: build (ubuntu-latest, 3.7)
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
