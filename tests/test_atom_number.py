@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""Test show and hide atom number.
+"""
+
 from xymol import XYMOL
 
 

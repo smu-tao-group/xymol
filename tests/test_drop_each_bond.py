@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""Test drop_each_bond function.
+"""
+
 from rdkit import Chem
 from xymol import XYMOL
 

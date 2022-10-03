@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""Test plot_mol and plot_similarity_map functions.
+"""
+
 import os
 from xymol import XYMOL
 
