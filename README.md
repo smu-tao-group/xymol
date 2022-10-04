@@ -4,7 +4,7 @@
 [![github ci](https://github.com/smu-tao-group/xymol/actions/workflows/ci.yml/badge.svg)](https://github.com/smu-tao-group/xymol/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/smu-tao-group/xymol/branch/main/graph/badge.svg?token=fl4kUOywR3)](https://codecov.io/gh/smu-tao-group/xymol)
 
-XYMOL is A Python package to understand and explain atom/bond contributions of small molecules in machine learning models.
+XYMOL: A Python package to understand and explain atom/bond contributions of small molecules in machine learning models.
 
 ## Install
 
@@ -12,7 +12,7 @@ Using `pip` to install:
 
 ```
 # for release (stable) version
-pip install getarticle
+pip install xymol
 
 # for the latest version
 pip install git+https://github.com/smu-tao-group/xymol.git
