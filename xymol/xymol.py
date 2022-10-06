@@ -9,6 +9,8 @@ from copy import deepcopy
 from rdkit import Chem
 from rdkit.Chem import Draw, rdmolfiles, rdmolops
 from rdkit.Chem.Draw import SimilarityMaps
+import numpy as np
+from deepchem import deepchem as dc
 
 
 class XYMOL:
@@ -133,3 +135,23 @@ class XYMOL:
             self.mol, weights, **kwargs
         )
         img.savefig(file_name, bbox_inches='tight', dpi=600)
+    
+    def create_map(self, featurizer, model, filename="similarity_map.png"):
+        """Create similarity map
+
+        Args:
+            featurizer (class): must have a featurize() function.
+            model (class): must have a predict() function.
+        """
+        parent_feat = featurizer().featurize(self.smiles)
+        parent_prediction = model.predict(dc.data.NumpyDataset(X=np.array(parent_feat)))
+
+        drop_atoms = self.drop_each_atom()
+        drop_atoms_feat = featurizer().featurize(np.array(drop_atoms))
+
+        predictions = model.predict(dc.data.NumpyDataset(X=np.array(drop_atoms_feat)))
+
+        weights = [pred - parent_prediction for pred in predictions]
+        self.plot_similarity_map(weights, filename)
+        
+
