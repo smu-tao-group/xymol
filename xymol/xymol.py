@@ -140,9 +140,21 @@ class XYMOL:
         """Create similarity map
 
         Args:
-            featurizer (class): must have a featurize() function.
-            model (class): must have a predict() function.
+            featurizer (class | str): if of type class, featurizer must have a featurize() function.
+            model (class | str): if of type class, model must have a predict() function.
         """
+
+        if(type(featurizer) == str):
+            match featurizer:
+                case "GraphConv":
+                    featurizer = dc.feat.ConvMolFeaturizer
+                case "ECFP":
+                    featurizer = dc.feat.CircularFingerprint
+                case "Weave":
+                    featurizer = dc.feat.WeaveFeaturizer
+                case _:
+                    raise ValueError("Featurizer not recognized")        
+
         parent_feat = featurizer().featurize(self.smiles)
         parent_prediction = model.predict(dc.data.NumpyDataset(X=np.array(parent_feat)))
 
