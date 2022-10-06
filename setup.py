@@ -37,7 +37,8 @@ setuptools.setup(
         "rdkit",
         "numpy",
         "matplotlib",
-        "deepchem"
+        "deepchem",
+        "tensorflow"
     ],
     python_requires='>=3.7'
 )
