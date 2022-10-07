@@ -10,7 +10,6 @@ from rdkit import Chem
 from rdkit.Chem import Draw, rdmolfiles, rdmolops
 from rdkit.Chem.Draw import SimilarityMaps
 import numpy as np
-from deepchem import deepchem as dc
 
 
 class XYMOL:
@@ -142,34 +141,26 @@ class XYMOL:
         """Create similarity map
 
         Args:
-            featurizer (class | str): if of type class, featurizer must have a featurize() function.
-            model (class | str): if of type class, model must have a predict() function.
+            featurizer (object): must have a featurize() function.
+            model (object): must have a predict() function.
 
         Returns:
-            list of weights
+            list: a list of weights
         """
+        if not( hasattr(featurizer, "featurize") and callable(getattr(featurizer, "featurize")) ):
+            raise ValueError("Featurizer must have featurize() function.")
 
-        if isinstance(featurizer, str):
-            if featurizer == "GraphConv":
-                featurizer = dc.feat.ConvMolFeaturizer
-            elif featurizer == "ECFP":
-                featurizer = dc.feat.CircularFingerprint
-            elif featurizer == "Weave":
-                featurizer = dc.feat.WeaveFeaturizer
-            else:
-                raise ValueError("Featurizer not recognized")
+        if not( hasattr(model, "predict") and callable(getattr(model, "predict")) ):
+            raise ValueError("Model must have predict() function.")
 
-        parent_feat = featurizer().featurize(self.smiles)
-        parent_prediction = model.predict(
-            dc.data.NumpyDataset(X=np.array(parent_feat))
-        )
 
-        drop_atoms = self.drop_each_atom()
-        drop_atoms_feat = featurizer().featurize(np.array(drop_atoms))
+        parent_feat = np.array(featurizer.featurize(self.smiles))
+        parent_prediction = model.predict(parent_feat)[0]
 
-        predictions = model.predict(
-            dc.data.NumpyDataset(X=np.array(drop_atoms_feat))
-        )
+        drop_atoms = np.array(self.drop_each_atom())
+        drop_atoms_feat = np.array(featurizer.featurize(drop_atoms))
+
+        predictions = model.predict(drop_atoms_feat)
 
         weights = [pred - parent_prediction for pred in predictions]
         self.plot_similarity_map(weights, filename)
