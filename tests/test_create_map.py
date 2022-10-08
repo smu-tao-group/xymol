@@ -5,12 +5,11 @@
 """
 
 import os
-from rdkit import Chem
+import pytest
 import numpy as np
 from xymol import XYMOL
 
 SMILES = "CCC1(CCC(C)C)C(=O)NC(=O)NC1=O"
-TEST_WEIGHT = 4.0
 
 class TestModel:
     def predict(self, data) -> float:
@@ -19,37 +18,38 @@ class TestModel:
         if data[0][0] == 1:
             return [0.0]
 
-        # return the test weight if predicting for drop_atoms
-        return [TEST_WEIGHT] * len(data)
+        # return 1.0 if predicting for drop_atoms
+        return [1.0] * len(data)
 
 class TestFeaturizer:
     def featurize(self, smiles) -> list:
 
-        #return list of zeros if drop_atoms is passed
+        # return list of zeros if drop_atoms is passed
         if isinstance(smiles, np.ndarray):
             feat = []
             for _ in range(len(smiles)):
                 feat.append([0, 0, 0])
             return feat
 
-        #return list of ones if the original smiles is passed
+        # return list of ones if the original smiles is passed
         return [[1, 1, 1]]
 
+xymol = XYMOL(SMILES)
 
 def test_create_map():
-    xymol = XYMOL(SMILES)
     file_name = "molecule.png"
 
-    weights = xymol.create_map(TestFeaturizer(), TestModel(), file_name)
-
-    mol = Chem.MolFromSmiles(SMILES)
-    assert len(weights) == len(mol.GetAtoms())
-
-    # check that all values in weights equal correct test difference (drop_atom pred minus parent_pred)
-    assert weights[0] == TEST_WEIGHT
-    assert weights.count(weights[0]) == len(weights)
+    xymol.create_map(TestFeaturizer(), TestModel(), file_name)
 
     # check file exists
     assert os.path.exists(file_name)
     # remove file
     os.remove(file_name)
+
+def test_create_map_without_featurizer():
+    with pytest.raises(ValueError):
+        xymol.create_map("", TestModel)
+
+def test_create_map_without_model():
+    with pytest.raises(ValueError):
+        xymol.create_map(TestFeaturizer, "")

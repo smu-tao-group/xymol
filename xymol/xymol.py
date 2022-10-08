@@ -137,20 +137,23 @@ class XYMOL:
 
     def create_map(
         self, featurizer, model, filename="similarity_map.png"
-        ) -> list:
+        ) -> None:
         """Create similarity map
 
         Args:
             featurizer (object): must have a featurize() function.
             model (object): must have a predict() function.
-
-        Returns:
-            list: a list of weights
         """
-        if not( hasattr(featurizer, "featurize") and callable(getattr(featurizer, "featurize")) ):
+        if not(
+            hasattr(featurizer, "featurize")
+            and callable( getattr(featurizer, "featurize") )
+        ):
             raise ValueError("Featurizer must have featurize() function.")
 
-        if not( hasattr(model, "predict") and callable(getattr(model, "predict")) ):
+        if not(
+            hasattr(model, "predict")
+            and callable( getattr(model, "predict") )
+        ):
             raise ValueError("Model must have predict() function.")
 
 
@@ -164,5 +167,3 @@ class XYMOL:
 
         weights = [pred - parent_prediction for pred in predictions]
         self.plot_similarity_map(weights, filename)
-
-        return weights
