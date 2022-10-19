@@ -18,6 +18,22 @@ pip install xymol
 pip install git+https://github.com/smu-tao-group/xymol.git
 ```
 
+## Usage
+
+The easiest way to use XYMOL is to input your featurizer (function to featurize SMILES) and the trained ML model through `create_map` function.
+
+```python
+from xymol import XYMOL
+
+SMILES = "CCC" # replace with your SMILES
+xymol = XYMOL(SMILES)
+xymol.create_map(FEATURIZER, TRAINED_MODEL)
+```
+
+One example is displayed below. Green color means dropping this atom would lead to an increase in prediction, and vice versa.
+
+<img src="./examples/imp.png" width="400">
+
 ## License
 
 Apache-2.0 license
